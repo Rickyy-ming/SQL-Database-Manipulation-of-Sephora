@@ -1,0 +1,1198 @@
+DB-Fiddle:  https://www.db-fiddle.com/f/4EfHMMs8XKvh9reTUQX3tT/4
+
+
+
+CREATE TABLE BRANCH(
+    branch_ID INT PRIMARY KEY,
+    branch_Address VARCHAR(255),
+    branch_Hours VARCHAR(50)
+);
+
+INSERT INTO BRANCH (branch_ID, branch_Address, branch_Hours) VALUES
+(1, '123 Main St', '09:00 - 18:00'),
+(2, '456 Elm St', '10:00 - 19:00'),
+(3, '789 Pine St', '08:00 - 17:00'),
+(4, '321 Oak St', '09:30 - 18:30'),
+(5, '654 Birch St', '10:30 - 19:30'),
+(6, '987 Cedar St', '08:30 - 17:30'),
+(7, '111 Ash St', '09:00 - 18:00'),
+(8, '222 Pine St', '10:00 - 19:00'),
+(9, '333 Spruce St', '08:00 - 17:00'),
+(10, '444 Willow St', '09:30 - 18:30');
+
+-- #DEPARTMENT Table (depends on BRANCH)
+CREATE TABLE DEPARTMENT (
+    dep_ID INT PRIMARY KEY,
+    dep_Name VARCHAR(255),
+    dep_Address VARCHAR(255),
+    branch_ID INT,
+    FOREIGN KEY (branch_ID) REFERENCES BRANCH(branch_ID)
+);
+
+INSERT INTO DEPARTMENT (dep_ID, dep_Name, dep_Address, branch_ID) VALUES
+(1, 'Sales', '123 Main St', 1),
+(2, 'Marketing', '456 Elm St', 2),
+(3, 'HR', '789 Pine St', 3),
+(4, 'Customer Service', '321 Oak St', 4),
+(5, 'Logistics', '654 Birch St', 5),
+(6, 'IT', '987 Cedar St', 6),
+(7, 'Finance', '111 Ash St', 7),
+(8, 'Operations', '222 Pine St', 8),
+(9, 'Procurement', '333 Spruce St', 9),
+(10, 'Legal', '444 Willow St', 10);
+
+-- #JOB_TITLE Table (depends on EMPLOYEE)
+CREATE TABLE JOB_TITLE (
+    title_ID INT PRIMARY KEY,
+    title_Name VARCHAR(255)
+);
+
+INSERT INTO JOB_TITLE (title_ID, title_Name) VALUES
+(1, 'Manager'),
+(2, 'Sales Associate'),
+(3, 'Product Specialist'),
+(4, 'Customer Service'),
+(5, 'Marketing Coordinator'),
+(6, 'HR Specialist'),
+(7, 'Warehouse Manager'),
+(8, 'Logistics Coordinator'),
+(9, 'Store Manager'),
+(10, 'Assistant Manager');
+
+-- #EMPLOYEE Table (needs to be created before any reference)
+CREATE TABLE EMPLOYEE (
+    employee_ID INT PRIMARY KEY,
+    employee_FName VARCHAR(255),
+    employee_LName VARCHAR(255),
+    employee_Email VARCHAR(255),
+    employee_DOB DATE,
+    employee_Address VARCHAR(255),
+    employee_Phone VARCHAR(20),
+    dep_ID INT,
+    title_ID INT,
+    Manager_ID INT,
+    FOREIGN KEY (Manager_ID) REFERENCES EMPLOYEE(employee_ID),
+    FOREIGN KEY (dep_ID) REFERENCES DEPARTMENT(dep_ID),
+    FOREIGN KEY (title_ID) REFERENCES JOB_TITLE (title_ID)
+);
+
+INSERT INTO EMPLOYEE (employee_ID, employee_FName, employee_LName, employee_Email, employee_DOB, employee_Address, employee_Phone, Manager_ID, dep_ID, title_ID) VALUES
+(1, 'Alex', 'Turner', 'alex.turner@example.com', '1980-05-15', '123 Main St', '555-1234', NULL, 1, 1),
+(9, 'Isabel', 'Green', 'isabel.green@example.com', '1973-01-25', '333 Spruce St', '555-3344', NULL, 9, 9),
+(7, 'Grace', 'Wilson', 'grace.wilson@example.com', '1998-11-15', '111 Ash St', '555-6789', NULL, 7, 7),
+(2, 'Brian', 'Johnson', 'brian.johnson@example.com', '1985-06-20', '456 Elm St', '555-5678', 9, 2, 2),
+(3, 'Catherine', 'Lee', 'catherine.lee@example.com', '1990-07-25', '789 Pine St', '555-9012', 1, 3, 3),
+(4, 'David', 'Smith', 'david.smith@example.com', '1975-08-30', '321 Oak St', '555-3456', 7, 4, 4),
+(5, 'Emily', 'Davis', 'emily.davis@example.com', '1982-09-05', '654 Birch St', '555-7890', 1, 5, 5),
+(6, 'Frank', 'Miller', 'frank.miller@example.com', '1969-10-10', '987 Cedar St', '555-2345', 7, 6, 6),
+(8, 'Henry', 'Brown', 'henry.brown@example.com', '1987-12-20', '222 Pine St', '555-1122', 1, 8, 8),
+(10, 'John', 'Taylor', 'john.taylor@example.com', '1995-02-28', '444 Willow St', '555-5566', 9, 10, 10);
+
+
+-- #CUSTOMER Table
+CREATE TABLE CUSTOMER (
+    cust_ID INT PRIMARY KEY NOT NULL,
+    cust_FName VARCHAR(255) NOT NULL,
+    cust_LName VARCHAR(255) NOT NULL,
+    cust_Email VARCHAR(255) NOT NULL,
+    cust_PhoneNum VARCHAR(20),
+    cust_Gender VARCHAR(10),
+    cust_Address VARCHAR(255),
+    cust_City VARCHAR(100),
+    cust_Country VARCHAR(100),
+    cust_DOB DATE
+);
+
+INSERT INTO CUSTOMER (cust_ID, cust_FName, cust_LName, cust_Email, cust_PhoneNum, cust_Gender, cust_Address, cust_City, cust_Country, cust_DOB) VALUES
+(1, 'John', 'Doe', 'johndoe@example.com', '555-1234', 'Male', '123 Maple St', 'Montreal', 'Canada', '1980-01-01'),
+(2, 'Jane', 'Smith', 'janesmith@example.com', '555-5678', 'Female', '456 Oak St', 'Toronto', 'Canada', '1985-05-15'),
+(3, 'Alice', 'Brown', 'alicebrown@example.com', '555-9012', 'Female', '789 Pine St', 'Vancouver', 'Canada', '1990-09-20'),
+(4, 'Bob', 'Johnon', 'bobjohnson@example.com', '555-3456', 'Male', '321 Elm St', 'Ottawa', 'Canada', '1975-03-12'),
+(5, 'Carol', 'Davis', 'caroldavis@example.com', '555-7890', 'Female', '654 Birch St', 'Calgary', 'Canada', '1995-07-08'),
+(6, 'Eve', 'Miller', 'evemiller@example.com', '555-2345', 'Female', '987 Cedar St', 'Halifax', 'Canada', '1982-02-22'),
+(7, 'Frank', 'Wilson', 'frankwilson@example.com', '555-6789', 'Male', '111 Ash St', 'Winnipeg', 'Canada', '1969-11-30'),
+(8, 'Grace', 'Taylor', 'gracetaylor@example.com', '555-1122', 'Female', '222 Pine St', 'Quebec City', 'Canada', '1998-05-18'),
+(9, 'Henry', 'White', 'henrywhite@example.com', '555-3344', 'Male', '333 Spruce St', 'Edmonton', 'Canada', '1987-12-14'),
+(10, 'Isabel', 'Green', 'isabelgreen@example.com', '555-5566', 'Female', '444 Willow St', 'Saskatoon', 'Canada', '1973-04-09');
+INSERT INTO CUSTOMER (cust_ID, cust_FName, cust_LName, cust_Email, cust_PhoneNum, cust_Gender, cust_Address, cust_City, cust_Country, cust_DOB) VALUES
+(11, 'Olivia', 'Clark', 'oliviaclark@example.com', '555-1101', 'Female', '123 Rose St', 'Toronto', 'Canada', '1988-03-05'),
+(12, 'Liam', 'Harris', 'liamharris@example.com', '555-1102', 'Male', '456 Maple St', 'Montreal', 'Canada', '1979-08-14'),
+(13, 'Sophia', 'Martinez', 'sophiamartinez@example.com', '555-1103', 'Female', '789 Oak St', 'Vancouver', 'Canada', '1992-07-12'),
+(14, 'Noah', 'Lee', 'noahlee@example.com', '555-1104', 'Male', '321 Cedar St', 'Ottawa', 'Canada', '1983-01-20'),
+(15, 'Emma', 'Walker', 'emmawalker@example.com', '555-1105', 'Female', '654 Birch St', 'Calgary', 'Canada', '1985-04-16'),
+(16, 'William', 'King', 'williamking@example.com', '555-1106', 'Male', '987 Pine St', 'Halifax', 'Canada', '1990-11-30'),
+(17, 'Mia', 'Wright', 'miawright@example.com', '555-1107', 'Female', '111 Spruce St', 'Winnipeg', 'Canada', '1975-12-07'),
+(18, 'James', 'Scott', 'jamesscott@example.com', '555-1108', 'Male', '222 Willow St', 'Quebec City', 'Canada', '1987-06-25'),
+(19, 'Amelia', 'Hill', 'ameliahill@example.com', '555-1109', 'Female', '333 Ash St', 'Edmonton', 'Canada', '1993-09-15'),
+(20, 'Alexander', 'Moore', 'alexandermoore@example.com', '555-1110', 'Male', '444 Cypress St', 'Saskatoon', 'Canada', '1981-05-22'),
+(21, 'Charlotte', 'Cooper', 'charlottecooper@example.com', '555-1111', 'Female', '555 Elm St', 'Victoria', 'Canada', '1994-02-18'),
+(22, 'Benjamin', 'Young', 'benjaminyoung@example.com', '555-1112', 'Male', '666 Fir St', 'Regina', 'Canada', '1982-10-02'),
+(23, 'Isabella', 'Green', 'isabellagreen@example.com', '555-1113', 'Female', '777 Oak St', 'St. John’s', 'Canada', '1995-03-29'),
+(24, 'Lucas', 'Perez', 'lucasperez@example.com', '555-1114', 'Male', '888 Cedar St', 'Hamilton', 'Canada', '1986-07-17'),
+(25, 'Evelyn', 'Davis', 'evelyndavis@example.com', '555-1115', 'Female', '999 Spruce St', 'Mississauga', 'Canada', '1980-12-11'),
+(26, 'Michael', 'Martinez', 'michaelmartinez@example.com', '555-1116', 'Male', '123 Willow St', 'Kingston', 'Canada', '1984-09-23'),
+(27, 'Harper', 'Anderson', 'harperanderson@example.com', '555-1117', 'Female', '456 Birch St', 'Thunder Bay', 'Canada', '1992-11-04'),
+(28, 'Ella', 'Thompson', 'ellathompson@example.com', '555-1118', 'Female', '789 Maple St', 'Kitchener', 'Canada', '1989-04-10'),
+(29, 'Daniel', 'Lopez', 'daniellopez@example.com', '555-1119', 'Male', '321 Pine St', 'Windsor', 'Canada', '1991-05-14'),
+(30, 'Ava', 'Clark', 'avaclark@example.com', '555-1120', 'Female', '654 Oak St', 'Sarnia', 'Canada', '1977-02-09'),
+(31, 'Ethan', 'Nelson', 'ethannelson@example.com', '555-1121', 'Male', '123 Poplar St', 'Montreal', 'Canada', '1991-02-11'),
+(32, 'Abigail', 'Baker', 'abigailbaker@example.com', '555-1122', 'Female', '456 Sycamore St', 'Toronto', 'Canada', '1984-06-23'),
+(33, 'Mason', 'Rivera', 'masonrivera@example.com', '555-1123', 'Male', '789 Beech St', 'Vancouver', 'Canada', '1987-09-08'),
+(34, 'Chloe', 'Carter', 'chloecarter@example.com', '555-1124', 'Female', '321 Walnut St', 'Ottawa', 'Canada', '1995-12-03'),
+(35, 'Aiden', 'Phillips', 'aidenphillips@example.com', '555-1125', 'Male', '654 Cedar St', 'Calgary', 'Canada', '1980-03-17'),
+(36, 'Avery', 'Evans', 'averyevans@example.com', '555-1126', 'Female', '987 Maple St', 'Halifax', 'Canada', '1978-05-27'),
+(37, 'Lucas', 'Parker', 'lucasparker@example.com', '555-1127', 'Male', '111 Willow St', 'Winnipeg', 'Canada', '1992-08-19'),
+(38, 'Lily', 'Edwards', 'lilyedwards@example.com', '555-1128', 'Female', '222 Spruce St', 'Quebec City', 'Canada', '1989-10-13'),
+(39, 'Elijah', 'Turner', 'elijahturner@example.com', '555-1129', 'Male', '333 Oak St', 'Edmonton', 'Canada', '1982-07-15'),
+(40, 'Sofia', 'Collins', 'sofiacollins@example.com', '555-1130', 'Female', '444 Birch St', 'Saskatoon', 'Canada', '1990-11-22'),
+(41, 'Jack', 'Stewart', 'jackstewart@example.com', '555-1131', 'Male', '555 Pine St', 'Victoria', 'Canada', '1977-04-28'),
+(42, 'Aria', 'Flores', 'ariaflores@example.com', '555-1132', 'Female', '666 Fir St', 'Regina', 'Canada', '1993-01-18'),
+(43, 'Sebastian', 'Morris', 'sebastianmorris@example.com', '555-1133', 'Male', '777 Elm St', 'St. John’s', 'Canada', '1981-11-11'),
+(44, 'Zoe', 'Bell', 'zoebell@example.com', '555-1134', 'Female', '888 Cedar St', 'Hamilton', 'Canada', '1985-02-14'),
+(45, 'Alexander', 'Jenkins', 'alexanderjenkins@example.com', '555-1135', 'Male', '999 Spruce St', 'Mississauga', 'Canada', '1994-09-07'),
+(46, 'Mila', 'Perry', 'milaperry@example.com', '555-1136', 'Female', '123 Willow St', 'Kingston', 'Canada', '1986-04-11'),
+(47, 'Henry', 'Reed', 'henryreed@example.com', '555-1137', 'Male', '456 Birch St', 'Thunder Bay', 'Canada', '1991-07-25'),
+(48, 'Luna', 'Howard', 'lunahoward@example.com', '555-1138', 'Female', '789 Maple St', 'Kitchener', 'Canada', '1983-06-05'),
+(49, 'Jackson', 'Ward', 'jacksonward@example.com', '555-1139', 'Male', '321 Pine St', 'Windsor', 'Canada', '1988-12-29'),
+(50, 'Ella', 'Peterson', 'ellapeterson@example.com', '555-1140', 'Female', '654 Oak St', 'Sarnia', 'Canada', '1982-03-03');
+
+
+
+-- #CUSTOMER_PREFERENCE Table (depends on CUSTOMER)
+CREATE TABLE CUSTOMER_PREFERENCE (
+    pref_ID INT NOT NULL,
+    skin_Type VARCHAR(50),
+    skin_Tone VARCHAR(50),
+    hair_Type VARCHAR(50),
+    hair_Color VARCHAR(50),
+    fragrance_Preference VARCHAR(50),
+    eye_Color VARCHAR(50),
+		cust_ID INT,
+    FOREIGN KEY (cust_ID) REFERENCES CUSTOMER(cust_ID)
+);
+
+INSERT INTO CUSTOMER_PREFERENCE (pref_ID, skin_Type, skin_Tone, hair_Type, hair_Color, fragrance_Preference, eye_Color, cust_ID) VALUES
+(71, 'Dry', 'Fair', 'Curly', 'Brown', 'Floral', 'Blue',1),
+(722, 'Oily', 'Medium', 'Straight', 'Blonde', 'Citrus', 'Green',2),
+(233, 'Combination', 'Dark', 'Wavy', 'Black', 'Woody', 'Brown',3),
+(451, 'Normal', 'Light', 'Straight', 'Red', 'Fruity', 'Hazel',4),
+(234, 'Dry', 'Fair', 'Curly', 'Brown', 'Floral', 'Blue',5),
+(763, 'Oily', 'Medium', 'Straight', 'Blonde', 'Citrus', 'Green',6),
+(394, 'Combination', 'Dark', 'Wavy', 'Black', 'Woody', 'Brown',7),
+(58, 'Normal', 'Light', 'Straight', 'Red', 'Fruity', 'Hazel',8),
+(923, 'Dry', 'Fair', 'Curly', 'Brown', 'Floral', 'Blue',9),
+(109, 'Oily', 'Medium', 'Straight', 'Blonde', 'Citrus', 'Green',10);
+
+-- #MEMBERSHIP Table (depends on CUSTOMER)
+CREATE TABLE MEMBERSHIP (
+    member_ID INT PRIMARY KEY,
+    member_Category VARCHAR(100),
+    member_Start DATE,
+    member_Status VARCHAR(50),
+    member_Points INT,
+		cust_ID INT,
+    FOREIGN KEY (cust_ID) REFERENCES CUSTOMER(cust_ID)
+);
+
+INSERT INTO MEMBERSHIP (member_ID, cust_ID, member_Category, member_Start, member_Status, member_Points) VALUES
+(1, 1, 'Gold', '2023-01-01', 'Active', 1000),
+(2, 2, 'Silver', '2023-02-01', 'Active', 800),
+(3, 3, 'Bronze', '2023-03-01', 'Inactive', 500),
+(4, 4, 'Gold', '2023-04-01', 'Active', 1200),
+(5, 5, 'Silver', '2023-05-01', 'Active', 750),
+(6, 6, 'Bronze', '2023-06-01', 'Inactive', 400),
+(7, 7, 'Gold', '2023-07-01', 'Active', 1500),
+(8, 8, 'Silver', '2023-08-01', 'Active', 900),
+(9, 9, 'Bronze', '2023-09-01', 'Inactive', 600),
+(10, 10, 'Gold', '2023-10-01', 'Active', 1300);
+
+-- #SERVICES Table
+CREATE TABLE SERVICES (
+    service_ID INT PRIMARY KEY,
+    service_Name VARCHAR(255) NOT NULL,
+    service_Details TEXT,
+    service_Price DECIMAL(10, 2)
+);
+
+INSERT INTO SERVICES (service_ID, service_Name, service_Details, service_Price) VALUES
+(1, 'Makeup Application', 'Professional makeup application service', 75.00),
+(2, 'Facial Treatment', 'Deep cleansing facial treatment', 60.00),
+(3, 'Hair Styling', 'Expert hair styling and care', 50.00),
+(4, 'Manicure', 'Complete manicure service', 30.00),
+(5, 'Pedicure', 'Complete pedicure service', 35.00),
+(6, 'Massage Therapy', 'Relaxing full-body massage', 80.00),
+(7, 'Brow Shaping', 'Eyebrow shaping and tinting', 25.00),
+(8, 'Hair Coloring', 'Professional hair coloring', 90.00),
+(9, 'Waxing', 'Full body waxing service', 55.00),
+(10, 'Microdermabrasion', 'Skin resurfacing treatment', 100.00);
+
+-- #SERVICE_ASSIGNMENT Table (depends on BRANCH, CUSTOMER, SERVICES)
+CREATE TABLE SERVICE_ASSIGNMENT (
+    assignment_ID INT PRIMARY KEY,
+    assignment_Date DATE,
+    assignment_Comment TEXT,
+    branch_ID INT,
+    cust_ID INT,
+    service_ID INT,
+    employee_ID INT, 
+    FOREIGN KEY (branch_ID) REFERENCES BRANCH(branch_ID),
+    FOREIGN KEY (cust_ID) REFERENCES CUSTOMER(cust_ID),
+    FOREIGN KEY (service_ID) REFERENCES SERVICES(service_ID),
+    FOREIGN KEY (employee_ID) References EMPLOYEE(employee_ID)
+);
+
+INSERT INTO SERVICE_ASSIGNMENT (assignment_ID, assignment_Date, assignment_Comment, branch_ID, cust_ID, service_ID, employee_ID) VALUES
+(1, '2024-01-15', 'Great service', 1, 1, 1,1),
+(2, '2024-01-16', 'Satisfactory', 2, 2, 2,2),
+(3, '2024-01-17', 'Excellent service', 3, 3, 3,3),
+(4, '2024-01-18', 'Could be better', 4, 4, 4,4),
+(5, '2024-01-19', 'Amazing experience', 5, 5, 5,5),
+(6, '2024-01-20', 'Very professional', 6, 6, 6,6),
+(7, '2024-01-21', 'Loved it', 7, 7, 7,7),
+(8, '2024-01-22', 'Not satisfied', 8, 8, 8,8),
+(9, '2024-01-23', 'Good service', 9, 9, 9,9),
+(10, '2024-01-24', 'Would recommend', 10, 10, 10,10);
+
+-- #BRAND Table
+CREATE TABLE BRAND (
+    brand_ID INT PRIMARY KEY,
+    brand_Name VARCHAR(40),
+    brand_Address VARCHAR(255),
+    brand_Phone VARCHAR(20)
+);
+
+INSERT INTO BRAND (brand_ID, brand_Name, brand_Address, brand_Phone) VALUES
+(1, 'Tarte', '123 Beauty Lane', '555-1111'),
+(2, 'NARS', '456 Glamour Ave', '555-2222'),
+(3, 'Makeup By Mario', '789 Style St', '555-3333'),
+(4, 'Haus Labs', '321 Chic Blvd', '555-4444'),
+(5, 'Gisou', '654 Trendy Rd', '555-5555'),
+(6, 'Huda Beauty', '987 Vogue Way', '555-6666'),
+(7, 'Charlotte Tilbury', '111 Luxe Ct', '555-7777'),
+(8, 'Tom Ford', '222 Fashion Dr', '555-8888'),
+(9, 'OUAI', '333 Glam St', '555-9999'),
+(10, 'Caudalie', '444 Elegance Rd', '555-0000');
+
+-- #CATEGORY Table
+CREATE TABLE CATEGORY (
+    category_ID INT PRIMARY KEY,
+    category_Name VARCHAR(255)
+);
+
+INSERT INTO CATEGORY (category_ID, category_Name) VALUES
+(1, 'Cosmetics'),
+(2, 'Skincare'),
+(3, 'Fragrance'),
+(4, 'Hair Care'),
+(5, 'Nail Care'),
+(6, 'Bath & Body'),
+(7, 'Tools & Brushes'),
+(8, 'Men''s Grooming'),
+(9, 'Health & Wellness'),
+(10, 'Accessories');
+
+-- #SUB_CATEGORY Table (depends on CATEGORY)
+CREATE TABLE SUB_CATEGORY (
+    subcategory_ID INT PRIMARY KEY NOT NULL,
+    subcategory_Name VARCHAR(255),
+    category_ID INT,
+    FOREIGN KEY (category_ID) REFERENCES CATEGORY(category_ID)
+);
+
+-- Corrected INSERT statement with category_ID
+INSERT INTO SUB_CATEGORY (subcategory_ID, subcategory_Name, category_ID) VALUES
+(1, 'Lip Products', 1),
+(2, 'Face Makeup', 1),
+(3, 'Eye Makeup', 1),
+(4, 'Perfumes', 3),
+(5, 'Moisturizers', 2),
+(6, 'Anti-Aging', 2),
+(7, 'Sunscreens', 2),
+(8, 'Shampoos', 4),
+(9, 'Conditioners', 4),
+(10, 'Body Washes', 6);
+
+
+-- #PROMOTION Table
+CREATE TABLE PROMOTION (
+    promotion_ID INT PRIMARY KEY NOT NULL,
+    promotion_Name VARCHAR(255),
+    promotion_StartDate DATE,
+    promotion_EndDate DATE,
+    promotion_Status VARCHAR(50)
+);
+
+INSERT INTO PROMOTION (promotion_ID, promotion_Name, promotion_StartDate, promotion_EndDate, promotion_Status) VALUES
+(1, 'Winter Sale', '2024-01-01', '2024-01-31', 'Active'),
+(2, 'Spring Sale', '2024-03-01', '2024-03-31', 'Active'),
+(3, 'Summer Sale', '2024-06-01', '2024-06-30', 'Active'),
+(4, 'Fall Sale', '2024-09-01', '2024-09-30', 'Active'),
+(5, 'Holiday Sale', '2024-12-01', '2024-12-31', 'Active'),
+(6, 'Clearance Sale', '2024-11-01', '2024-11-30', 'Active'),
+(7, 'Black Friday', '2024-11-24', '2024-11-27', 'Active'),
+(8, 'Cyber Monday', '2024-11-28', '2024-11-30', 'Active'),
+(9, 'New Year Sale', '2024-12-31', '2025-01-05', 'Active'),
+(10, 'Valentine''s Sale', '2024-02-01', '2024-02-14', 'Active');
+
+-- Create the INVENTORY table with INT type for prod_Reorder
+CREATE TABLE INVENTORY (
+    inventory_ID INT PRIMARY KEY NOT NULL,
+    prod_Count INT,
+    prod_Reorder INT,
+    branch_ID INT,
+    product_ID INT,
+    FOREIGN KEY (branch_ID) REFERENCES BRANCH(branch_ID)
+   
+);
+
+-- Insert values into the INVENTORY table using 1 and 0 for prod_Reorder
+INSERT INTO INVENTORY (inventory_ID, prod_Count, prod_Reorder, branch_ID) VALUES
+(1, 100, 1, 1),
+(2, 150, 0, 2),
+(3, 200, 1, 3),
+(4, 80, 0, 4),
+(5, 120, 1, 5),
+(6, 50, 0, 6),
+(7, 300, 1, 7),
+(8, 250, 0, 8),
+(9, 90, 1, 9),
+(10, 180, 0, 10);
+
+-- #PRODUCT Table (depends on BRAND, SUB_CATEGORY, PROMOTION)
+CREATE TABLE PRODUCT (
+    product_ID INT PRIMARY KEY NOT NULL,
+    product_Name VARCHAR(255),
+    product_SubName VARCHAR(255),
+    product_Description TEXT,
+    product_Ingredients TEXT,
+    product_Price DECIMAL(10, 2),
+    product_Type VARCHAR(100),
+    brand_ID INT,
+    subCategory_ID INT,
+    promotion_ID INT,
+    inventory_ID INT,
+    FOREIGN KEY (brand_ID) REFERENCES BRAND(brand_ID),
+    FOREIGN KEY (subCategory_ID) REFERENCES SUB_CATEGORY(subCategory_ID),
+    FOREIGN KEY (promotion_ID) REFERENCES PROMOTION(promotion_ID),
+    FOREIGN KEY(inventory_ID) REFERENCES INVENTORY(inventory_ID)
+);
+
+-- Insert products
+INSERT INTO PRODUCT (product_ID, product_Name, product_SubName, product_Description, product_Ingredients, product_Price, product_Type, brand_ID, subCategory_ID, promotion_ID, inventory_ID) VALUES
+(1001, 'Lipstick', 'Rouge', 'A vibrant red lipstick', 'Beeswax, Castor Oil', 20.00, 'Cosmetic', 1, 1, 1, 1),
+(1002, 'Foundation', 'Fair', 'Full coverage foundation', 'Water, Glycerin, Dimethicone', 35.00, 'Cosmetic', 2, 2, 2, 2),
+(1003, 'Mascara', 'Black', 'Waterproof mascara', 'Beeswax, Water', 15.00, 'Cosmetic', 1, 3, 1,3),
+(1004, 'Eyeshadow', 'Blue Lagoon', 'Long-lasting eyeshadow', 'Mica, Talc, Magnesium Stearate', 25.00, 'Cosmetic', 3, 2, 2, 4),
+(1005, 'Blush', 'Peach', 'Natural finish blush', 'Talc, Mica, Zinc Stearate', 22.00, 'Cosmetic', 4, 1, 3, 5),
+(1006, 'Nail Polish', 'Crimson', 'Chip-resistant nail polish', 'Ethyl Acetate, Butyl Acetate', 12.00, 'Cosmetic', 2, 3, 4, 6),
+(1007, 'Perfume', 'Rose Delight', 'A floral fragrance with rose notes', 'Alcohol, Water, Fragrance', 45.00, 'Fragrance', 5, 4, 1, 7),
+(1008, 'Moisturizer', 'Hydra Boost', 'Lightweight moisturizer for daily use', 'Water, Glycerin, Hyaluronic Acid', 30.00, 'Skincare', 6, 5, 2, 8),
+(1009, 'Serum', 'Youth Elixir', 'Anti-aging serum with retinol', 'Water, Retinol, Hyaluronic Acid', 50.00, 'Skincare', 7, 6, 3, 9),
+(1010, 'Sunscreen', 'Sun Shield SPF 50', 'Broad-spectrum sunscreen', 'Zinc Oxide, Titanium Dioxide', 18.00, 'Skincare', 6, 7, 2, 10);
+
+
+-- #PRODUCT_REVIEW Table (depends on CUSTOMER, PRODUCT)
+CREATE TABLE PRODUCT_REVIEW (
+    review_ID INT PRIMARY KEY,
+    review_rating INT,
+    review_comment TEXT,
+    review_Date DATE,
+    product_ID INT,
+	cust_ID INT,
+    FOREIGN KEY (cust_ID) REFERENCES CUSTOMER(cust_ID),
+    FOREIGN KEY (product_ID) REFERENCES PRODUCT(product_ID)
+);
+
+INSERT INTO PRODUCT_REVIEW (review_ID, review_rating, review_comment, review_Date, cust_ID, product_ID) VALUES
+(1, 5, 'Amazing product!', '2024-01-15', 1, 1001),
+(2, 4, 'Very good, will buy again.', '2024-01-16', 2, 1002),
+(3, 3, 'It''s okay, nothing special.', '2024-01-17', 3, 1003),
+(4, 5, 'Exceeded expectations!', '2024-01-18', 4, 1004),
+(5, 4, 'Good quality.', '2024-01-19', 5, 1005),
+(6, 2, 'Not what I expected.', '2024-01-20', 6, 1006),
+(7, 5, 'Perfect!', '2024-01-21', 7, 1007),
+(8, 3, 'Average product.', '2024-01-22', 8, 1008),
+(9, 4, 'Works well.', '2024-01-23', 9, 1009),
+(10, 5, 'Highly recommend!', '2024-01-24', 10, 1010);
+
+-- #ORDERS Table (depends on CUSTOMER)
+CREATE TABLE ORDERS (
+    order_ID INT PRIMARY KEY,
+    order_Date DATE NOT NULL,
+    order_Status VARCHAR(50),
+    order_Total DECIMAL(10, 2),
+    cust_ID INT,
+    shipment_ID INT,
+    invoice_ID INT,
+    FOREIGN KEY (cust_ID) REFERENCES CUSTOMER(cust_ID)
+);
+
+INSERT INTO ORDERS (order_ID, order_Date, order_Status, order_Total, cust_ID, shipment_ID, invoice_ID) VALUES
+(101, '2024-02-15', 'Shipped', 250.00, 1, 201, 301),
+(102, '2024-02-16', 'Processing', 350.00, 2, 202, 302),
+(103, '2024-02-17', 'Delivered', 450.00, 3, 203, 303),
+(104, '2024-02-18', 'Shipped', 200.00, 4, 204, 304),
+(105, '2024-02-19', 'Delivered', 300.00, 5, 205, 305),
+(106, '2024-02-20', 'Processing', 400.00, 6, 206, 306),
+(107, '2024-02-21', 'Shipped', 500.00, 7, 207, 307),
+(108, '2024-02-22', 'Processing', 550.00, 8, 208, 308),
+(109, '2024-02-23', 'Delivered', 600.00, 9, 209, 309),
+(110, '2024-02-24', 'Shipped', 650.00, 10, 210, 310);
+INSERT INTO ORDERS (order_ID, order_Date, order_Status, order_Total, cust_ID, shipment_ID, invoice_ID) VALUES
+(111, '2024-03-01', 'Delivered', 200.00, 11, 211, 311),
+(112, '2024-03-02', 'Shipped', 350.00, 12, 212, 312),
+(113, '2024-03-03', 'Processing', 250.00, 13, 213, 313),
+(114, '2024-03-04', 'Delivered', 400.00, 14, 214, 314),
+(115, '2024-03-05', 'Shipped', 150.00, 15, 215, 315),
+(116, '2024-03-06', 'Delivered', 300.00, 16, 216, 316),
+(117, '2024-03-07', 'Processing', 500.00, 17, 217, 317),
+(118, '2024-03-08', 'Delivered', 600.00, 18, 218, 318),
+(119, '2024-03-09', 'Shipped', 450.00, 19, 219, 319),
+(120, '2024-03-10', 'Processing', 250.00, 20, 220, 320),
+(121, '2024-03-11', 'Delivered', 350.00, 21, 221, 321),
+(122, '2024-03-12', 'Shipped', 200.00, 22, 222, 322),
+(123, '2024-03-13', 'Processing', 300.00, 23, 223, 323),
+(124, '2024-03-14', 'Delivered', 400.00, 24, 224, 324),
+(125, '2024-03-15', 'Shipped', 150.00, 25, 225, 325),
+(126, '2024-03-16', 'Delivered', 250.00, 26, 226, 326),
+(127, '2024-03-17', 'Processing', 500.00, 27, 227, 327),
+(128, '2024-03-18', 'Delivered', 600.00, 28, 228, 328),
+(129, '2024-03-19', 'Shipped', 450.00, 29, 229, 329),
+(130, '2024-03-20', 'Processing', 300.00, 30, 230, 330),
+(131, '2024-03-21', 'Delivered', 275.00, 31, 231, 331),
+(132, '2024-03-22', 'Processing', 325.00, 32, 232, 332),
+(133, '2024-03-23', 'Shipped', 175.00, 33, 233, 333),
+(134, '2024-03-24', 'Delivered', 425.00, 34, 234, 334),
+(135, '2024-03-25', 'Processing', 225.00, 35, 235, 335),
+(136, '2024-03-26', 'Shipped', 375.00, 36, 236, 336),
+(137, '2024-03-27', 'Delivered', 475.00, 37, 237, 337),
+(138, '2024-03-28', 'Processing', 525.00, 38, 238, 338),
+(139, '2024-03-29', 'Shipped', 150.00, 39, 239, 339),
+(140, '2024-03-30', 'Delivered', 275.00, 40, 240, 340),
+(141, '2024-03-31', 'Processing', 425.00, 41, 241, 341),
+(142, '2024-04-01', 'Shipped', 325.00, 42, 242, 342),
+(143, '2024-04-02', 'Delivered', 275.00, 43, 243, 343),
+(144, '2024-04-03', 'Processing', 475.00, 44, 244, 344),
+(145, '2024-04-04', 'Shipped', 225.00, 45, 245, 345),
+(146, '2024-04-05', 'Delivered', 375.00, 46, 246, 346),
+(147, '2024-04-06', 'Processing', 525.00, 47, 247, 347),
+(148, '2024-04-07', 'Shipped', 150.00, 48, 248, 348),
+(149, '2024-04-08', 'Delivered', 275.00, 49, 249, 349),
+(150, '2024-04-09', 'Processing', 325.00, 50, 250, 350);
+
+-- #ORDER_LINE Table (depends on ORDERS, PRODUCT)
+CREATE TABLE ORDER_LINE (
+    line_ID INT PRIMARY KEY,
+    line_Quantity INT,
+    line_Price DECIMAL(10, 2),
+    auto_Replenish BOOLEAN,
+    order_ID INT,
+    product_ID INT,
+    FOREIGN KEY (order_ID) REFERENCES ORDERS(order_ID),
+    FOREIGN KEY (product_ID) REFERENCES PRODUCT(product_ID)
+);
+
+INSERT INTO ORDER_LINE (line_ID, line_Quantity, line_Price, auto_Replenish, order_ID, product_ID) VALUES
+(1, 2, 40.00, FALSE, 101, 1001),
+(2, 1, 35.00, TRUE, 102, 1002),
+(3, 3, 45.00, FALSE, 103, 1003),
+(4, 2, 25.00, TRUE, 104, 1004),
+(5, 1, 22.00, FALSE, 105, 1005),
+(6, 2, 12.00, TRUE, 106, 1006),
+(7, 1, 45.00, FALSE, 107, 1007),
+(8, 3, 90.00, TRUE, 108, 1008),
+(9, 2, 30.00, FALSE, 109, 1009),
+(10, 1, 18.00, TRUE, 110, 1010);
+INSERT INTO ORDER_LINE (line_ID, line_Quantity, line_Price, auto_Replenish, order_ID, product_ID) VALUES
+(11, 2, 75.00, TRUE, 111, 1001),
+(12, 1, 60.00, FALSE, 112, 1002),
+(13, 3, 50.00, TRUE, 113, 1003),
+(14, 2, 30.00, FALSE, 114, 1004),
+(15, 1, 35.00, TRUE, 115, 1005),
+(16, 2, 80.00, FALSE, 116, 1006),
+(17, 1, 25.00, TRUE, 117, 1007),
+(18, 3, 90.00, FALSE, 118, 1008),
+(19, 2, 55.00, TRUE, 119, 1009),
+(20, 1, 100.00, FALSE, 120, 1010),
+(21, 2, 75.00, TRUE, 121, 1001),
+(22, 1, 60.00, FALSE, 122, 1002),
+(23, 3, 50.00, TRUE, 123, 1003),
+(24, 2, 30.00, FALSE, 124, 1004),
+(25, 1, 35.00, TRUE, 125, 1005),
+(26, 2, 80.00, FALSE, 126, 1006),
+(27, 1, 25.00, TRUE, 127, 1007),
+(28, 3, 90.00, FALSE, 128, 1008),
+(29, 2, 55.00, TRUE, 129, 1009),
+(30, 1, 100.00, FALSE, 130, 1010),
+(31, 2, 20.00, TRUE, 131, 1001),
+(32, 1, 25.00, FALSE, 132, 1002),
+(33, 3, 15.00, TRUE, 133, 1003),
+(34, 2, 35.00, FALSE, 134, 1004),
+(35, 1, 40.00, TRUE, 135, 1005),
+(36, 2, 18.00, FALSE, 136, 1006),
+(37, 1, 30.00, TRUE, 137, 1007),
+(38, 3, 22.00, FALSE, 138, 1008),
+(39, 2, 55.00, TRUE, 139, 1009),
+(40, 1, 32.00, FALSE, 140, 1010),
+(41, 2, 27.00, TRUE, 141, 1001),
+(42, 1, 45.00, FALSE, 142, 1002),
+(43, 3, 52.00, TRUE, 143, 1003),
+(44, 2, 75.00, FALSE, 144, 1004),
+(45, 1, 12.00, TRUE, 145, 1005),
+(46, 2, 33.00, FALSE, 146, 1006),
+(47, 1, 58.00, TRUE, 147, 1007),
+(48, 3, 41.00, FALSE, 148, 1008),
+(49, 2, 15.00, TRUE, 149, 1009),
+(50, 1, 48.00, FALSE, 150, 1010);
+
+-- #PAYMENT_METHOD Table (depends on CUSTOMER)
+CREATE TABLE PAYMENT_METHOD (
+    payment_ID INT PRIMARY KEY,
+    payment_Date DATE,
+    cust_ID INT,
+    FOREIGN KEY (cust_ID) REFERENCES CUSTOMER(cust_ID)
+);
+
+INSERT INTO PAYMENT_METHOD (payment_ID, payment_Date, cust_ID) VALUES
+(401, '2024-02-15', 1),
+(402, '2024-02-16', 2),
+(403, '2024-02-17', 3),
+(404, '2024-02-18', 4),
+(405, '2024-02-19', 5),
+(406, '2024-02-20', 6),
+(407, '2024-02-21', 7),
+(408, '2024-02-22', 8),
+(409, '2024-02-23', 9),
+(410, '2024-02-24', 10);
+INSERT INTO PAYMENT_METHOD (payment_ID, payment_Date, cust_ID) VALUES
+(411, '2023-01-10', 11),
+(412, '2023-01-20', 12),
+(413, '2023-02-05', 13),
+(414, '2023-02-15', 14),
+(415, '2023-03-01', 15),
+(416, '2023-03-10', 16),
+(417, '2023-03-20', 17),
+(418, '2023-04-01', 18),
+(419, '2023-04-15', 19),
+(420, '2023-05-01', 20),
+(421, '2023-05-10', 21),
+(422, '2023-05-20', 22),
+(423, '2023-06-01', 23),
+(424, '2023-06-15', 24),
+(425, '2023-07-01', 25),
+(426, '2023-07-10', 26),
+(427, '2023-07-20', 27),
+(428, '2023-08-01', 28),
+(429, '2023-08-15', 29),
+(430, '2023-09-01', 30),
+(431, '2023-09-10', 31),
+(432, '2023-09-20', 32),
+(433, '2023-10-01', 33),
+(434, '2023-10-10', 34),
+(435, '2023-10-20', 35),
+(436, '2023-11-01', 36),
+(437, '2023-11-10', 37),
+(438, '2023-11-20', 38),
+(439, '2023-12-01', 39),
+(440, '2023-12-10', 40),
+(441, '2023-12-15', 41),
+(442, '2024-01-05', 42),
+(443, '2024-01-15', 43),
+(444, '2024-01-25', 44),
+(445, '2024-02-05', 45),
+(446, '2024-02-15', 46),
+(447, '2024-03-01', 47),
+(448, '2024-03-10', 48),
+(449, '2024-03-20', 49),
+(450, '2024-04-01', 50);
+
+-- #INVOICE Table (depends on ORDERS, PAYMENT_METHOD)
+CREATE TABLE INVOICE (
+    invoice_ID INT PRIMARY KEY,
+    invoice_Value DECIMAL(10, 2),
+    invoice_Date DATE NOT NULL,
+    invoice_Promo VARCHAR(100),
+    order_ID INT,
+    payment_ID INT,
+    FOREIGN KEY (order_ID) REFERENCES ORDERS(order_ID),
+    FOREIGN KEY (payment_ID) REFERENCES PAYMENT_METHOD(payment_ID)
+);
+
+INSERT INTO INVOICE (invoice_ID, invoice_Value, invoice_Date, invoice_Promo, order_ID, payment_ID) VALUES
+(301, 250.00, '2024-02-15', NULL, 101, 401),
+(302, 350.00, '2024-02-16', NULL, 102, 402),
+(303, 450.00, '2024-02-17', NULL, 103, 403),
+(304, 200.00, '2024-02-18', NULL, 104, 404),
+(305, 300.00, '2024-02-19', NULL, 105, 405),
+(306, 400.00, '2024-02-20', 'SPRING15', 106, 406),
+(307, 500.00, '2024-02-21', NULL, 107, 407),
+(308, 550.00, '2024-02-22', NULL, 108, 408),
+(309, 600.00, '2024-02-23', NULL, 109, 409),
+(310, 650.00, '2024-02-24', NULL, 110, 410);
+INSERT INTO INVOICE (invoice_ID, invoice_Value, invoice_Date, invoice_Promo, order_ID, payment_ID) VALUES
+(311, 200.00, '2024-03-01', 'SPRING15', 111, 411),
+(312, 350.00, '2024-03-02', NULL, 112, 412),  -- No promotion
+(313, 250.00, '2024-03-03', 'SPRING15', 113, 413),
+(314, 400.00, '2024-03-04', NULL, 114, 414),  -- No promotion
+(315, 150.00, '2024-03-05', 'SUMMER20', 115, 415),
+(316, 300.00, '2024-03-06', NULL, 116, 416),  -- No promotion
+(317, 500.00, '2024-03-07', 'FALL25', 117, 417),
+(318, 600.00, '2024-03-08', NULL, 118, 418),  -- No promotion
+(319, 450.00, '2024-03-09', 'FALL25', 119, 419),
+(320, 250.00, '2024-03-10', NULL, 120, 420),  -- No promotion
+(321, 350.00, '2024-03-11', 'WINTER10', 121, 421),
+(322, 200.00, '2024-03-12', NULL, 122, 422),  -- No promotion
+(323, 300.00, '2024-03-13', 'WINTER10', 123, 423),
+(324, 400.00, '2024-03-14', NULL, 124, 424),  -- No promotion
+(325, 150.00, '2024-03-15', NULL,125, 425),
+(326, 250.00, '2024-03-16', NULL, 126, 426),  -- No promotion
+(327, 500.00, '2024-03-17', 'WINTER10', 127, 427),
+(328, 600.00, '2024-03-18', NULL, 128, 428),  -- No promotion
+(329, 450.00, '2024-03-19', 'WINTER10', 129, 429),
+(330, 300.00, '2024-03-20', NULL, 130, 430),  -- No promotion
+(331, 275.00, '2024-03-21', 'SPRING15', 131, 431),
+(332, 325.00, '2024-03-22', NULL, 132, 432),  -- No promotion
+(333, 175.00, '2024-03-23', 'SPRING15', 133, 433),
+(334, 425.00, '2024-03-24', NULL, 134, 434),  -- No promotion
+(335, 225.00, '2024-03-25', NULL, 135, 435),
+(336, 375.00, '2024-03-26', NULL, 136, 436),  -- No promotion
+(337, 475.00, '2024-03-27', NULL, 137, 437),
+(338, 525.00, '2024-03-28', NULL, 138, 438),  -- No promotion
+(339, 150.00, '2024-03-29', NULL, 139, 439),
+(340, 275.00, '2024-03-30', NULL, 140, 440),  -- No promotion
+(341, 425.00, '2024-03-31', NULL, 141, 441),
+(342, 325.00, '2024-04-01', NULL, 142, 442),  -- No promotion
+(343, 275.00, '2024-04-02', 'WINTER10', 143, 443),
+(344, 475.00, '2024-04-03', NULL, 144, 444),  -- No promotion
+(345, 225.00, '2024-04-04', 'WINTER10', 145, 445),
+(346, 375.00, '2024-04-05', NULL, 146, 446),  -- No promotion
+(347, 525.00, '2024-04-06', NULL, 147, 447),
+(348, 150.00, '2024-04-07', NULL, 148, 448),  -- No promotion
+(349, 275.00, '2024-04-08', NULL, 149, 449),
+(350, 325.00, '2024-04-09', NULL, 150, 450);  -- No promotion
+
+-- #REFUND_INVOICE Table (depends on ORDERS)
+CREATE TABLE REFUND_INVOICE (
+    refund_ID INT PRIMARY KEY,
+    refund_Amount DECIMAL(10, 2),
+    refund_Reason TEXT,
+    refund_Date DATE,
+    order_ID INT,
+    FOREIGN KEY (order_ID) REFERENCES ORDERS(order_ID)
+);
+
+INSERT INTO REFUND_INVOICE (refund_ID, refund_Amount, refund_Reason, refund_Date, order_ID) VALUES
+(1, 50.00, 'Damaged item', '2024-02-25', 101),
+(2, 30.00, 'Wrong item', '2024-02-26', 102),
+(3, 20.00, 'Late delivery', '2024-02-27', 103),
+(4, 40.00, 'Quality issue', '2024-02-28', 104),
+(5, 60.00, 'Item not as described', '2024-02-29', 105),
+(6, 70.00, 'Size issue', '2024-03-01', 106),
+(7, 80.00, 'Color mismatch', '2024-03-02', 107),
+(8, 90.00, 'Defective product', '2024-03-03', 108),
+(9, 100.00, 'Package damaged', '2024-03-04', 109),
+(10, 110.00, 'Item missing', '2024-03-05', 110);
+
+-- #DELIVERY Table (depends on SHIPMENT)
+CREATE TABLE DELIVERY (
+    delivery_ID INT PRIMARY KEY,
+    delivery_RouteNo VARCHAR(100),
+    delivery_ETA DATE,
+    delivery_QTY INT
+);
+
+INSERT INTO DELIVERY (delivery_ID,  delivery_RouteNo, delivery_ETA, delivery_QTY) VALUES
+(1,  'Route 11', '2024-03-03', 3),
+(2,  'Route 12', '2024-03-04', 4),
+(3,  'Route 13', '2024-03-05', 2),
+(4,  'Route 14', '2024-03-06', 5),
+(5,  'Route 15', '2024-03-07', 1),
+(6, 'Route 16', '2024-03-08', 3),
+(7, 'Route 17', '2024-03-09', 2),
+(8,  'Route 18', '2024-03-10', 4),
+(9,  'Route 19', '2024-03-11', 5),
+(10,  'Route 20', '2024-03-12', 3),
+(11,  'Route 21', '2024-03-13', 2),
+(12,  'Route 22', '2024-03-14', 4),
+(13,  'Route 23', '2024-03-15', 1),
+(14,  'Route 24', '2024-03-16', 3),
+(15,  'Route 25', '2024-03-17', 2),
+(16,  'Route 26', '2024-03-18', 5),
+(17, 'Route 27', '2024-03-19', 3),
+(18,  'Route 28', '2024-03-20', 2),
+(19,  'Route 29', '2024-03-21', 4),
+(20,  'Route 30', '2024-03-22', 1),
+(21,  'Route 31', '2024-03-23', 4),
+(22,  'Route 32', '2024-03-24', 3),
+(23, 'Route 33', '2024-03-25', 5),
+(24,  'Route 34', '2024-03-26', 2),
+(25,  'Route 35', '2024-03-27', 3),
+(26,  'Route 36', '2024-03-28', 4),
+(27,  'Route 37', '2024-03-29', 2),
+(28,  'Route 38', '2024-03-30', 1),
+(29,  'Route 39', '2024-03-31', 3),
+(30,  'Route 40', '2024-04-01', 5),
+(31,  'Route 41', '2024-04-02', 2),
+(32,  'Route 42', '2024-04-03', 4),
+(33,  'Route 43', '2024-04-04', 1),
+(34,  'Route 44', '2024-04-05', 3),
+(35,  'Route 45', '2024-04-06', 2),
+(36, 'Route 46', '2024-04-07', 4),
+(37,  'Route 47', '2024-04-08', 3),
+(38,'Route 48', '2024-04-09', 5),
+(39,  'Route 49', '2024-04-10', 2),
+(40,  'Route 50', '2024-04-11', 4);
+
+
+-- #SHIPMENT Table (depends on ORDERS, EMPLOYEE)
+CREATE TABLE SHIPMENT (
+    shipment_ID INT PRIMARY KEY,
+    order_ID INT,
+    employee_ID INT,
+    shipment_Date DATE,
+    shipment_Address VARCHAR(255),
+    delivery_ID INT,
+    FOREIGN KEY (order_ID) REFERENCES ORDERS(order_ID),
+    FOREIGN KEY (employee_ID) REFERENCES EMPLOYEE(employee_ID),
+    FOREIGN KEY (delivery_ID) REFERENCES DELIVERY(delivery_ID)
+);
+
+INSERT INTO SHIPMENT (shipment_ID, order_ID, employee_ID, shipment_Date, shipment_Address, delivery_ID) VALUES
+(211, 111, 1, '2024-03-02', '123 Rose St, Toronto, Canada', 1),
+(212, 112, 2, '2024-03-03', '456 Maple St, Montreal, Canada', 2),
+(213, 113, 3, '2024-03-04', '789 Oak St, Vancouver, Canada', 3),
+(214, 114, 4, '2024-03-05', '321 Cedar St, Ottawa, Canada', 4),
+(215, 115, 5, '2024-03-06', '654 Birch St, Calgary, Canada', 5),
+(216, 116, 6, '2024-03-07', '987 Pine St, Halifax, Canada', 6),
+(217, 117, 7, '2024-03-08', '111 Spruce St, Winnipeg, Canada', 7),
+(218, 118, 8, '2024-03-09', '222 Willow St, Quebec City, Canada', 8),
+(219, 119, 9, '2024-03-10', '333 Ash St, Edmonton, Canada', 9),
+(220, 120, 10, '2024-03-11', '444 Cypress St, Saskatoon, Canada', 10),
+(221, 121, 1, '2024-03-12', '555 Elm St, Victoria, Canada', 11),
+(222, 122, 2, '2024-03-13', '666 Fir St, Regina, Canada', 12),
+(223, 123, 3, '2024-03-14', '777 Oak St, St. John’s, Canada', 13),
+(224, 124, 4, '2024-03-15', '888 Cedar St, Hamilton, Canada', 14),
+(225, 125, 5, '2024-03-16', '999 Spruce St, Mississauga, Canada', 15),
+(226, 126, 6, '2024-03-17', '123 Willow St, Kingston, Canada', 16),
+(227, 127, 7, '2024-03-18', '456 Birch St, Thunder Bay, Canada', 17),
+(228, 128, 8, '2024-03-19', '789 Maple St, Kitchener, Canada', 18),
+(229, 129, 9, '2024-03-20', '321 Pine St, Windsor, Canada', 19),
+(230, 130, 10, '2024-03-21', '654 Oak St, Sarnia, Canada', 20),
+(231, 131, 1, '2024-03-22', '123 Poplar St, Montreal, Canada', 21),
+(232, 132, 2, '2024-03-23', '456 Sycamore St, Toronto, Canada', 22),
+(233, 133, 3, '2024-03-24', '789 Beech St, Vancouver, Canada', 23),
+(234, 134, 4, '2024-03-25', '321 Walnut St, Ottawa, Canada', 24),
+(235, 135, 5, '2024-03-26', '654 Cedar St, Calgary, Canada', 25),
+(236, 136, 6, '2024-03-27', '987 Maple St, Halifax, Canada', 26),
+(237, 137, 7, '2024-03-28', '111 Willow St, Winnipeg, Canada', 27),
+(238, 138, 8, '2024-03-29', '222 Spruce St, Quebec City, Canada', 28),
+(239, 139, 9, '2024-03-30', '333 Oak St, Edmonton, Canada', 29),
+(240, 140, 10, '2024-03-31', '444 Birch St, Saskatoon, Canada', 30),
+(241, 141, 1, '2024-04-01', '555 Pine St, Victoria, Canada', 31),
+(242, 142, 2, '2024-04-02', '666 Fir St, Regina, Canada', 32),
+(243, 143, 3, '2024-04-03', '777 Elm St, St. John’s, Canada', 33),
+(244, 144, 4, '2024-04-04', '888 Cedar St, Hamilton, Canada', 34),
+(245, 145, 5, '2024-04-05', '999 Spruce St, Mississauga, Canada', 35),
+(246, 146, 6, '2024-04-06', '123 Willow St, Kingston, Canada', 36),
+(247, 147, 7, '2024-04-07', '456 Birch St, Thunder Bay, Canada', 37),
+(248, 148, 8, '2024-04-08', '789 Maple St, Kitchener, Canada', 38),
+(249, 149, 9, '2024-04-09', '321 Pine St, Windsor, Canada', 39),
+(250, 150, 10, '2024-04-10', '654 Oak St, Sarnia, Canada', 40);
+
+
+
+Queries:
+"Query 1: Average Points per Membership Category:
+Purpose: To calculate the average membership points earned by customers in each membership category, useful for loyalty program analysis.
+SELECT member_Category, AVG(member_Points) AS Avg_Points
+FROM MEMBERSHIP
+GROUP BY member_Category;
+
+"Query 2: Most Popular Services"
+#Purpose: To identify the most popular services based on customer bookings. This will allow the company to analyse which service is the most profitable in oreder to create further service offering and potentially segment the market.
+SELECT s.service_Name, COUNT(sa.assignment_ID) AS Total_Bookings
+FROM SERVICES s
+JOIN SERVICE_ASSIGNMENT sa ON s.service_ID = sa.service_ID
+GROUP BY s.service_Name
+ORDER BY Total_Bookings DESC;
+
+"Query 3: Brands with Highest Profits for Potential Partnerships"
+#Purpose: This query aims to identify the brands that contribute the most profit to the company. 
+SELECT b.brand_Name, SUM(ol.line_Price * ol.line_Quantity) AS Total_Profit
+FROM BRAND b
+JOIN PRODUCT p ON b.brand_ID = p.brand_ID
+JOIN ORDER_LINE ol ON p.product_ID = ol.product_ID
+GROUP BY b.brand_Name
+ORDER BY Total_Profit DESC;
+
+"Query 4: Customer Satisfaction"
+#Purpose: To analyze customer satisfaction based on product reviews and service comments.
+SELECT c.cust_FName, c.cust_LName, AVG(pr.review_rating) AS Avg_Product_Rating, AVG(sa.assignment_Comment) AS Avg_Service_Comment
+FROM CUSTOMER c
+LEFT JOIN PRODUCT_REVIEW pr ON c.cust_ID = pr.cust_ID
+LEFT JOIN SERVICE_ASSIGNMENT sa ON c.cust_ID = sa.cust_ID
+GROUP BY c.cust_FName, c.cust_LName;
+
+"Query 5: Top-Selling Products"
+#Purpose: To identify which products are selling the most, allowing Sephora to focus on stocking popular items and optimizing inventory levels.
+SELECT p.product_Name, SUM(ol.line_Quantity) AS Total_Sold
+FROM PRODUCT p
+JOIN ORDER_LINE ol ON p.product_ID = ol.product_ID
+GROUP BY p.product_Name
+ORDER BY Total_Sold DESC;
+
+"Query 6: Employee Performance by Revenue Generated from Services"
+#Purpose: To evaluate employees based on the total revenue they generated through service assignments.
+SELECT e.employee_ID, e.employee_FName, e.employee_LName, SUM(s.service_Price) AS Total_Revenue
+FROM EMPLOYEE e
+JOIN SERVICE_ASSIGNMENT sa ON e.employee_ID = sa.employee_ID
+JOIN SERVICES s ON sa.service_ID = s.service_ID
+GROUP BY e.employee_ID, e.employee_FName, e.employee_LName
+ORDER BY Total_Revenue DESC;
+
+"Query 7: Identify Idle Customers (No Orders in the Last Year)"
+#Purpose: To find customers who haven’t placed any orders in the past year, allowing Sephora to re-engage them through targeted marketing.
+SELECT c.cust_ID, c.cust_FName, c.cust_LName, MAX(o.order_Date) AS Last_Order_Date
+FROM CUSTOMER c
+JOIN ORDERS o ON c.cust_ID = o.cust_ID
+GROUP BY c.cust_ID, c.cust_FName, c.cust_LName
+HAVING MAX(o.order_Date) < DATE_SUB(CURRENT_DATE, INTERVAL 1 YEAR);
+
+"Query 8: Best-Selling Product by Each Brand"
+#Purpose: To determine the top-selling product for each brand, helping Sephora and the brands understand which products are driving sales.
+SELECT b.brand_ID, brand_name, product_Name, product_Price
+FROM PRODUCT p inner join BRAND b on p.brand_ID = b.brand_ID
+WHERE product_ID = (
+    SELECT product_ID 
+    FROM ORDER_LINE ol
+    WHERE ol.product_ID = p.product_ID
+    GROUP BY ol.product_ID
+    ORDER BY SUM(ol.line_Quantity) DESC
+    LIMIT 1
+);
+
+"Query 9: Employees Managing More Than Three Employees"
+#Purpose: To identify managers who supervise more than 2 employees, aiding in workload balancing and management efficiency analysis.
+SELECT employee_ID, employee_FName, employee_LName
+FROM EMPLOYEE e
+WHERE (SELECT COUNT(*)
+       FROM EMPLOYEE e2
+       WHERE e2.Manager_ID = e.employee_ID) > 2;
+
+"Query 10: Sales by Category"
+#Purpose: To analyze sales performance by product category for strategic planning.
+SELECT cat.category_Name, SUM(ol.line_Price * ol.line_Quantity) AS Total_Sales
+FROM CATEGORY cat
+JOIN SUB_CATEGORY sub ON cat.category_ID = sub.category_ID
+JOIN PRODUCT p ON sub.subcategory_ID = p.subCategory_ID
+JOIN ORDER_LINE ol ON p.product_ID = ol.product_ID
+GROUP BY cat.category_Name
+ORDER BY Total_Sales DESC;
+
+"Query 11: Refunds Analysis"
+#Purpose: To analyze refund reasons to improve product quality and customer service.
+SELECT r.refund_Reason, COUNT(r.refund_ID) AS Refund_Count, SUM(r.refund_Amount) AS Total_Refund_Amount
+FROM REFUND_INVOICE r
+GROUP BY r.refund_Reason
+ORDER BY Refund_Count DESC;
+
+"Query 12: Customers with High Lifetime Value (LTV)"
+#Purpose: To identify customers with the highest lifetime value for loyalty programs.
+SELECT c.cust_FName, c.cust_LName, SUM(o.order_Total) AS Lifetime_Value
+FROM CUSTOMER c
+JOIN ORDERS o ON c.cust_ID = o.cust_ID
+GROUP BY c.cust_FName, c.cust_LName
+ORDER BY Lifetime_Value DESC;
+
+"Query 13: Effectiveness of Marketing Promotions"
+#Purpose: This query is designed to evaluate the effectiveness of marketing promotions by analyzing the revenue generated during active promotions. The goal is to help the marketing department understand which promotions are driving sales and generating the most revenue. This insight is crucial for optimizing future promotional strategies, determining which promotions to repeat or modify, and identifying areas where marketing efforts may need adjustment.
+SELECT p.promotion_Name, SUM(i.invoice_Value) AS Total_Revenue
+FROM PROMOTION p
+JOIN PRODUCT pr ON p.promotion_ID = pr.promotion_ID
+JOIN ORDER_LINE ol ON pr.product_ID = ol.product_ID
+JOIN ORDERS o ON ol.order_ID = o.order_ID
+JOIN INVOICE i ON o.order_ID = i.order_ID
+WHERE p.promotion_Status = 'Active'
+GROUP BY p.promotion_Name
+ORDER BY Total_Revenue DESC;
+
+"Query 14: End-to-End Order Fulfillment and Delivery Efficiency"
+#Purpose: To analyze the end-to-end order fulfillment process, from order placement to delivery, and assess delivery efficiency based on delivery routes, ETAs, employee involvement, and time taken from order placement to delivery.
+SELECT 
+    o.order_ID, 
+    c.cust_FName, 
+    c.cust_LName, 
+    o.order_Date, 
+    s.shipment_Address, 
+    d.delivery_RouteNo, 
+    d.delivery_ETA, 
+    e.employee_FName AS Delivery_Employee, 
+    SUM(ol.line_Quantity) AS Total_Items, 
+    SUM(i.invoice_Value) AS Order_Value,
+    DATEDIFF(d.delivery_ETA, o.order_Date) AS Days_To_Delivery
+FROM ORDERS o
+JOIN CUSTOMER c ON o.cust_ID = c.cust_ID
+JOIN SHIPMENT s ON o.order_ID = s.order_ID
+JOIN DELIVERY d ON s.delivery_ID = d.delivery_ID
+JOIN EMPLOYEE e ON s.employee_ID = e.employee_ID
+JOIN ORDER_LINE ol ON o.order_ID = ol.order_ID
+JOIN INVOICE i ON o.order_ID = i.order_ID
+GROUP BY o.order_ID, c.cust_FName, c.cust_LName, o.order_Date, s.shipment_Address, d.delivery_RouteNo, d.delivery_ETA, e.employee_FName
+ORDER BY o.order_Date DESC;
+
+"Query 15: Product Sales Trends by Season with Moving Average"
+#Purpose: To analyze product sales trends over different seasons using a moving average to smooth out fluctuations in sales.
+SELECT 
+    p.product_Name, 
+    CASE 
+        WHEN MONTH(o.order_Date) IN (12, 1, 2) THEN 'Winter'
+        WHEN MONTH(o.order_Date) IN (3, 4, 5) THEN 'Spring'
+        WHEN MONTH(o.order_Date) IN (6, 7, 8) THEN 'Summer'
+        ELSE 'Fall'
+    END AS Season, 
+    SUM(ol.line_Quantity) AS Total_Sales, 
+    AVG(SUM(ol.line_Quantity)) OVER (PARTITION BY p.product_Name ORDER BY o.order_Date ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) AS Moving_Average
+FROM PRODUCT p
+JOIN ORDER_LINE ol ON p.product_ID = ol.product_ID
+JOIN ORDERS o ON ol.order_ID = o.order_ID
+JOIN INVOICE i ON o.order_ID = i.order_ID
+JOIN CUSTOMER c ON o.cust_ID = c.cust_ID
+JOIN MEMBERSHIP m ON c.cust_ID = m.cust_ID
+JOIN PROMOTION pr ON p.promotion_ID = pr.promotion_ID
+JOIN BRAND b ON p.brand_ID = b.brand_ID
+GROUP BY p.product_Name, Season, o.order_Date
+ORDER BY p.product_Name, o.order_Date;
+
+"Query 16: Customer Retention and Order Frequency Analysis"
+#Purpose: To analyze customer retention and order frequency, tracking how often customers place orders and how this correlates with their membership status.
+SELECT 
+    cust_ID, 
+    cust_FName, 
+    cust_LName, 
+    member_Category, 
+    Total_Orders, 
+    DENSE_RANK() OVER (PARTITION BY cust_ID ORDER BY order_Date) AS Order_Frequency_Rank,
+    Last_Order_Date,
+    First_Order_Date,
+    DATEDIFF(Last_Order_Date, First_Order_Date) AS Days_Between_First_And_Last_Order
+FROM (
+    SELECT 
+        c.cust_ID, 
+        c.cust_FName, 
+        c.cust_LName, 
+        m.member_Category, 
+        COUNT(o.order_ID) AS Total_Orders, 
+        MAX(o.order_Date) AS Last_Order_Date,
+        MIN(o.order_Date) AS First_Order_Date,
+        o.order_Date
+    FROM CUSTOMER c
+    JOIN MEMBERSHIP m ON c.cust_ID = m.cust_ID
+    JOIN ORDERS o ON c.cust_ID = o.cust_ID
+    JOIN ORDER_LINE ol ON o.order_ID = ol.order_ID
+    JOIN PRODUCT p ON ol.product_ID = p.product_ID
+    JOIN PROMOTION pr ON p.promotion_ID = pr.promotion_ID
+    JOIN BRAND b ON p.brand_ID = b.brand_ID
+    JOIN INVOICE i ON o.order_ID = i.order_ID
+    GROUP BY c.cust_ID, c.cust_FName, c.cust_LName, m.member_Category, o.order_Date
+) AS subquery
+ORDER BY Total_Orders DESC;
+
+"Business Insight:
+This query provides a detailed analysis of customer retention by tracking how often customers place orders and the duration of their engagement with the company.
+Insights from this analysis can help improve customer retention strategies and target frequent buyers with loyalty programs."
+
+"Query 17: Highest-Spending Customers by Product Category"
+Purpose: To identify the top-spending customers within each product category, helping Sephora understand which customers are driving sales in specific categories.
+SELECT 
+    c.cust_ID,
+    c.cust_FName,
+    c.cust_LName,
+    cat.category_Name,
+    SUM(ol.line_Price * ol.line_Quantity) AS Total_Spent
+FROM 
+    CUSTOMER c
+JOIN 
+    ORDERS o ON c.cust_ID = o.cust_ID
+JOIN 
+    ORDER_LINE ol ON o.order_ID = ol.order_ID
+JOIN 
+    PRODUCT p ON ol.product_ID = p.product_ID
+JOIN 
+    SUB_CATEGORY sc ON p.subCategory_ID = sc.subcategory_ID
+JOIN 
+    CATEGORY cat ON sc.category_ID = cat.category_ID
+GROUP BY 
+    c.cust_ID, c.cust_FName, c.cust_LName, cat.category_Name
+HAVING 
+    SUM(ol.line_Price * ol.line_Quantity) = (
+        SELECT MAX(Total_Spent)
+        FROM (
+            SELECT 
+                c.cust_ID,
+                SUM(ol.line_Price * ol.line_Quantity) AS Total_Spent
+            FROM 
+                CUSTOMER c
+            JOIN 
+                ORDERS o ON c.cust_ID = o.cust_ID
+            JOIN 
+                ORDER_LINE ol ON o.order_ID = ol.order_ID
+            JOIN 
+                PRODUCT p ON ol.product_ID = p.product_ID
+            JOIN 
+                SUB_CATEGORY sc ON p.subCategory_ID = sc.subcategory_ID
+            JOIN 
+                CATEGORY cat ON sc.category_ID = cat.category_ID
+            GROUP BY 
+                c.cust_ID, cat.category_Name
+        ) AS Customer_Spending
+    )
+ORDER BY 
+    Total_Spent DESC;
+
+"Query 18: Product Sales Comparison Before and After Promotion"
+#Purpose: To evaluate the effectiveness of a promotion by comparing product sales before and after the promotion period.
+SELECT 
+    p.product_ID,
+    p.product_Name,
+    (SELECT SUM(ol.line_Quantity)
+     FROM ORDER_LINE ol
+     JOIN ORDERS o ON ol.order_ID = o.order_ID
+     WHERE ol.product_ID = p.product_ID
+       AND o.order_Date < pr.promotion_StartDate) AS Sales_Before,
+    (SELECT SUM(ol.line_Quantity)
+     FROM ORDER_LINE ol
+     JOIN ORDERS o ON ol.order_ID = o.order_ID
+     WHERE ol.product_ID = p.product_ID
+       AND o.order_Date >= pr.promotion_StartDate
+       AND o.order_Date <= pr.promotion_EndDate) AS Sales_After
+FROM 
+    PRODUCT p
+JOIN 
+    PROMOTION pr ON p.promotion_ID = pr.promotion_ID
+WHERE 
+    p.promotion_ID IS NOT NULL
+ORDER BY 
+    p.product_Name;
+
+"Query 18: Products with Low Inventory (Below Reorder Level)"
+#Purpose: To identify products with low inventory levels that are below their 
+specified reorder points. This information is critical for timely restocking 
+and preventing stockouts.
+SELECT 
+    p.product_Name, 
+    i.prod_Count AS Current_Inventory,
+    i.prod_Reorder AS Reorder_Level
+FROM 
+    PRODUCT p
+JOIN 
+    INVENTORY i ON p.product_ID = i.product_ID
+WHERE 
+    i.prod_Count < i.prod_Reorder;
+
+" Query 19: Customer Churn Analysis"
+#Purpose: Identify customers who have not placed an order in the last 12 months but were 
+active in the prior year (customer churn analysis)
+
+SELECT 
+    ac.cust_ID, 
+    ac.OrderCount AS LastYearOrderCount
+FROM (
+    SELECT 
+        cust_ID,
+        COUNT(order_ID) AS OrderCount
+    FROM ORDERS
+    WHERE order_Date BETWEEN DATE_SUB(CURDATE(), INTERVAL 2 YEAR) AND DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
+    GROUP BY cust_ID
+    HAVING COUNT(order_ID) > 0
+) ac
+JOIN (
+    SELECT 
+        c.cust_ID
+    FROM CUSTOMER c
+    LEFT JOIN ORDERS o ON c.cust_ID = o.cust_ID
+    WHERE o.order_Date >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
+    GROUP BY c.cust_ID
+    HAVING COUNT(o.order_ID) = 0
+) ic
+ON ac.cust_ID = ic.cust_ID;
+
+"Query 20: Promotion Effectiveness by Region with Row Number"
+#Purpose: To analyze the effectiveness of promotions across different regions and rank them by sales performance.
+SELECT 
+    b.branch_Address, 
+    p.product_Name, 
+    pr.promotion_Name, 
+    SUM(i.invoice_Value) AS Total_Revenue, 
+    ROW_NUMBER() OVER (PARTITION BY b.branch_Address ORDER BY SUM(i.invoice_Value) DESC) AS Promotion_Rank
+FROM BRANCH b
+JOIN INVENTORY inv ON b.branch_ID = inv.branch_ID
+JOIN PRODUCT p ON inv.product_ID = p.product_ID
+JOIN PROMOTION pr ON p.promotion_ID = pr.promotion_ID
+JOIN ORDER_LINE ol ON p.product_ID = ol.product_ID
+JOIN ORDERS o ON ol.order_ID = o.order_ID
+JOIN CUSTOMER c ON o.cust_ID = c.cust_ID
+JOIN INVOICE i ON o.order_ID = i.order_ID
+GROUP BY b.branch_Address, p.product_Name, pr.promotion_Name
+ORDER BY b.branch_Address, Promotion_Rank;
+
+
+"Query 21: Customer Segmentation for Personalized Product Recommendations"
+#Purpose: This query segments customers based on their purchasing behavior (frequency, recency, and monetary value) and provides personalized product recommendations based on similar customers' buying patterns. The goal is to increase customer engagement and sales through targeted marketing and recommendations.
+WITH Customer_Segmentation AS (
+    SELECT 
+        c.cust_ID,
+        c.cust_FName,
+        c.cust_LName,
+        COUNT(o.order_ID) AS Order_Frequency,
+        MAX(o.order_Date) AS Last_Order_Date,
+        SUM(i.invoice_Value) AS Total_Spent,
+        DENSE_RANK() OVER (ORDER BY COUNT(o.order_ID) DESC) AS Frequency_Rank,
+        DENSE_RANK() OVER (ORDER BY MAX(o.order_Date) DESC) AS Recency_Rank,
+        DENSE_RANK() OVER (ORDER BY SUM(i.invoice_Value) DESC) AS Monetary_Rank
+    FROM CUSTOMER c
+    JOIN ORDERS o ON c.cust_ID = o.cust_ID
+    JOIN INVOICE i ON o.order_ID = i.order_ID
+    JOIN ORDER_LINE ol ON o.order_ID = ol.order_ID
+    JOIN PRODUCT p ON ol.product_ID = p.product_ID
+    GROUP BY c.cust_ID, c.cust_FName, c.cust_LName
+),
+Top_Products_Per_Segment AS (
+    SELECT 
+        cs.cust_ID,
+        p.product_Name,
+        SUM(ol.line_Quantity) AS Total_Quantity,
+        RANK() OVER (PARTITION BY cs.cust_ID ORDER BY SUM(ol.line_Quantity) DESC) AS Product_Rank
+    FROM Customer_Segmentation cs
+    JOIN ORDERS o ON cs.cust_ID = o.cust_ID
+    JOIN ORDER_LINE ol ON o.order_ID = ol.order_ID
+    JOIN PRODUCT p ON ol.product_ID = p.product_ID
+    GROUP BY cs.cust_ID, p.product_Name
+),
+Product_Recommendations AS (
+    SELECT 
+        cs.cust_FName,
+        cs.cust_LName,
+        cs.Frequency_Rank,
+        cs.Recency_Rank,
+        cs.Monetary_Rank,
+        tp.product_Name AS Recommended_Product
+    FROM Customer_Segmentation cs
+    JOIN Top_Products_Per_Segment tp ON cs.cust_ID = tp.cust_ID
+    WHERE tp.Product_Rank = 1
+      AND cs.Monetary_Rank <= 5  -- Target top 5 spenders
+      AND cs.Recency_Rank <= 5    -- Target customers with recent activity
+)
+SELECT 
+    pr.cust_FName,
+    pr.cust_LName,
+    pr.Recommended_Product,
+    pr.Frequency_Rank,
+    pr.Recency_Rank,
+    pr.Monetary_Rank
+FROM Product_Recommendations pr
+ORDER BY pr.Monetary_Rank, pr.Recency_Rank, pr.Frequency_Rank;
+
+"Business Insight:
+This query allows Sephora to identify its most valuable and active customers and recommend products based on similar customers' purchasing behavior. By targeting highest spenders who have recently made purchases, Sephora can increase the likelihood of future sales.
+This personalized approach helps improve customer retention and satisfaction by offering relevant product suggestions, potentially boosting overall sales and customer loyalty."
+
